@@ -8,11 +8,11 @@ public class PollishedFPSController : MonoBehaviour
 
     private GameObject playersCamera; //The camera the player looks through. It is created in code.
     private CharacterController controller; //The Unity CharacterController component that deals with collision and movement.
-    
+
     void Start()
     {
-        controller = gameObject.AddComponent(typeof(CharacterController)); //Creates the thing
-        
+        controller = gameObject.AddComponent<CharacterController>(); //Creates the thing
+
         controller.center = new Vector3(0, 1, 0); //Transform position at player's feet
         controller.height = 2f;
         controller.radius = 0.5f; //These two values should be set to unity's default
@@ -33,13 +33,13 @@ public class PollishedFPSController : MonoBehaviour
     private Vector2 lookDirection; //Holds the direction the player is looking. 1 unit = 360 deg
     void Update()
     {
-        lookDirection += Vector2.right * Input.GetAxis("Mouse X");
-        lookDirection += Vector2.up * Input.GetAxis("Mouse Y");
+        lookDirection += Vector2.right * Input.GetAxis("Mouse X") * Time.deltaTime;
+        lookDirection += Vector2.up * Input.GetAxis("Mouse Y")    * Time.deltaTime;
 
-        lookDirection.y = Mathf.Clamp(lookDirection.y, -90, 90);
+        lookDirection.y = Mathf.Clamp(lookDirection.y, -0.25f, 0.25f);
 
         Quaternion bodyRotation = Quaternion.Euler(0, lookDirection.x * 360f, 0);
-        Quaternion cameraRotation = Quaternion.Euler(-lookDirection.y * 360f, lookDirection.x * 360f, 0);
+        Quaternion cameraRotation = Quaternion.Euler(lookDirection.y * 360f, lookDirection.x * 360f, 0);
 
         playersCamera.transform.rotation = cameraRotation;
         transform.rotation = bodyRotation;
